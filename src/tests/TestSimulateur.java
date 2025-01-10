@@ -56,84 +56,72 @@ public class TestSimulateur extends Simulateur
 		System.out.println("(c) La "+portes[0]+" s'est bien refermee.");
 	}
 
-
 	@Test
-	@DisplayName("==> Test Ascenseur 1 : Fonctionnement")
-	public void testAscenseurComportement() {
-		if(Constantes.DEBUG)
-			System.out.println("ascenseur est � l'�tage 3 et il va � l'�tage 1");
+	public void verifierMouvementAscenseur() {
+		if (Constantes.DEBUG)
+			System.out.println("Ascenseur démarre au 3e étage et se dirige vers le 1er étage");
 
-		ascenseur = new Ascenseur(3, this); /*1, 2, 3*/
-		int dist = 0; /*0, 1, 2*/
-		this.appels[dist] = Direction.DOWN;
+		ascenseur = new Ascenseur(3, this);
+		this.appels[0] = Direction.DOWN;
 
 		ascenseur.start();
 
-		// Attendre le mouvement de l'ascenseur
+		// Pause pour permettre le déplacement de l'ascenseur
 		try { Thread.sleep(500); }
-		catch(InterruptedException e) { System.out.print("Erreur dans Thread.sleep\n"); }
+		catch (InterruptedException e) { System.out.print("Erreur pendant Thread.sleep\n"); }
 
-		/* Valider le comportement de l'ascenseur */
-		assertTrue(ascenseur.etage == dist+1);
+		// Validation de la position de l'ascenseur
+		assertEquals(1, ascenseur.etage);
 
-		if(Constantes.DEBUG) System.out.println("ascenseur est arriv� � l'�tage 1");
-		if(Constantes.DEBUG) System.out.println("prochaine destination est : �tage 2");
+		if (Constantes.DEBUG)
+			System.out.println("Ascenseur est arrivé au 1er étage.");
 
-		dist = 1;
-		this.appels[dist] = Direction.UP;
+		// Prochaine destination : 2e étage
+		this.appels[1] = Direction.UP;
 
-		// Attendre le mouvement de l'ascenseur
 		try { Thread.sleep(500); }
-		catch(InterruptedException e) { System.out.print("Erreur dans Thread.sleep\n"); }
+		catch (InterruptedException e) { System.out.print("Erreur pendant Thread.sleep\n"); }
 
-		/* Valider le comportement de l'ascenseur */
-		assertTrue(ascenseur.etage == dist+1);
+		assertEquals(2, ascenseur.etage);
 
-		if(Constantes.DEBUG) System.out.println("ascenseur est arriv� � l'�tage 2");
+		if (Constantes.DEBUG)
+			System.out.println("Ascenseur est arrivé au 2e étage.");
 	}
 
 	@ParameterizedTest
-	@ValueSource (ints = {1, 3})
-	@DisplayName("==> Test Ascenseur 2 : Les Limites")
-	public void testAscenseurLimite(int etage) {
-		ascenseur = new Ascenseur(etage,this);
+	@ValueSource(ints = {1, 3})
+	public void verifierLimitesAscenseur(int etageInitial) {
+		ascenseur = new Ascenseur(etageInitial, this);
 		ascenseur.start();
 
-		// Attendre le mouvement de l'ascenseur
 		try { Thread.sleep(200); }
-		catch(InterruptedException e) { System.out.print("Erreur dans Thread.sleep\n"); }
+		catch (InterruptedException e) { System.out.print("Erreur pendant Thread.sleep\n"); }
 
-		if(ascenseur.etage == 1) {
-			assertTrue(ascenseur.dir.equals(Direction.UP));
-			if(Constantes.DEBUG) System.out.println("Ascenseur est � l'�tage 1 => dir == UP");
-		}
-		else if(ascenseur.etage == Constantes.ETAGES) {
-			assertTrue(ascenseur.dir.equals(Direction.DOWN));
-			if(Constantes.DEBUG) System.out.println("Ascenseur est � l'�tage 3 => dir == DOWN");
+		if (ascenseur.etage == 1) {
+			assertEquals(Direction.UP, ascenseur.dir);
+			if (Constantes.DEBUG)
+				System.out.println("Ascenseur au 1er étage : direction UP.");
+		} else if (ascenseur.etage == Constantes.ETAGES) {
+			assertEquals(Direction.DOWN, ascenseur.dir);
+			if (Constantes.DEBUG)
+				System.out.println("Ascenseur au dernier étage : direction DOWN.");
 		}
 	}
 
 	@Test
-	@DisplayName("==> Test Usager 1 : Appel de l'ascenseur")
-	public void testUsager() {
-
+	public void verifierUsager() {
 		int etageAppel = 1;
-		int dist = 3;
+		int destination = 3;
 
-		Usager user = new Usager("toto", etageAppel, dist, this);
+		Usager utilisateur = new Usager("Jean", etageAppel, destination, this);
+		utilisateur.start();
 
-		user.start();
-
-		// Attendre le mouvement de l'ascenseur
 		try { Thread.sleep(500); }
-		catch(InterruptedException e) { System.out.print("Erreur dans Thread.sleep\n"); }
+		catch (InterruptedException e) { System.out.print("Erreur pendant Thread.sleep\n"); }
 
-		// validation du comportement d'usager
-		assertFalse(this.appels[etageAppel-1].equals(Direction.NONE));
+		assertNotEquals(Direction.NONE, this.appels[etageAppel - 1]);
 
 		if (Constantes.DEBUG)
-			System.out.println("Usager utilise l'ascenseur au moins une fois");
-
+			System.out.println("L'usager a utilisé l'ascenseur avec succès.");
 	}
-
 }

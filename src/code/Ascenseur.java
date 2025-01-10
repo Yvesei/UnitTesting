@@ -95,29 +95,29 @@ public class Ascenseur extends Thread
 	{
 		Direction ret =Direction.NONE;
 
-		// Si la direction de l�ascenseur est vers le haut ou qu�il n�y en a pas (none) :
+		// Si la direction de l'ascenseur est vers le haut ou qu�il n�y en a pas (none) :
 		if(dir.equals(Direction.UP) || dir.equals(Direction.NONE)) {
 
-			// S�il existe un appel au-dessus ou une destination au-dessus, garder la direction vers le haut
+			// S'il existe un appel au-dessus ou une destination au-dessus, garder la direction vers le haut
 			if(appelAuDessus(etage) || destinationAuDessus(etage)) {
 				ret = Direction.UP;
 			}
 
-			// S�il existe un appel en dessous ou une destination au-dessous, changer la direction vers le bas.
+			// S'il existe un appel en dessous ou une destination au-dessous, changer la direction vers le bas.
 			else if (appelEnDessous(etage) || destinationEnDessous(etage)) {
 				ret = Direction.DOWN;
 			}
 		}
 
-		// Si la direction de l�ascenseur est vers le bas :
+		// Si la direction de l'ascenseur est vers le bas :
 		else if(dir.equals(Direction.DOWN)) {
 
-			// S�il existe un appel en dessous ou une destination au-dessous, garder la direction vers le bas.
+			// S'il existe un appel en dessous ou une destination au-dessous, garder la direction vers le bas.
 			if(appelEnDessous(etage) || destinationEnDessous(etage)) {
 				ret = Direction.DOWN;
 			}
 
-			// S�il existe un appel au-dessus ou une destination au-dessus, changer la direction vers le haut.
+			// S'il existe un appel au-dessus ou une destination au-dessus, changer la direction vers le haut.
 			else if (appelAuDessus(etage) || destinationAuDessus(etage)) {
 				ret = Direction.UP;
 			}
